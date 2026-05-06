@@ -5,7 +5,7 @@ category: network_forensics
 difficulty: medium
 source: 2024FIC_finals
 date: 2026-05-05
-verified: true
+verified: false
 ---
 # Title: 2024FIC Finals - OpenWrt Soft Router Analysis (10 Questions)
 
@@ -13,67 +13,67 @@ verified: true
 Analyze the OpenWrt soft router running inside PVE VM "Router" (100). Answer 10 questions about configuration, credentials, OpenClash proxy settings, and firewall rules.
 
 ## Evidence
-- PVE VM 100 (Router) ‚Äî OpenWrt soft router
+- PVE VM 100 (Router) ‚Ä?OpenWrt soft router
 - MobaXterm session records from PersonalPC
 
 ## Solution Steps
 
 ### Setup
-1. Start VM 100 (Router) in PVE ‚Äî shows OpenWrt boot screen
+1. Start VM 100 (Router) in PVE ‚Ä?shows OpenWrt boot screen
 2. IP: 192.168.71.100 (matches MobaXterm session)
 3. MobaXterm requires master password `mobapass00` to reveal saved credentials
 4. Re-analyze with forensic tool after entering master password to see stored SSH passwords
 
 ### Q1: Soft router root password
 After entering MobaXterm master password (mobapass00), forensic tool reveals stored SSH credentials.
-‚Üí **OP2024fic**
+‚Ü?**OP2024fic**
 
 ### Q2: HTTP management panel port
 ```
 netstat -antp
 ```
 HTTP port visible, verify by accessing web UI.
-‚Üí **8080**
+‚Ü?**8080**
 
 ### Q3: System version
 Visible on OpenWrt login page or via `cat /etc/openwrt_release`.
-‚Üí **23.05.2**
+‚Ü?**23.05.2**
 
 ### Q4: WAN gateway
-OpenWrt Web UI ‚Üí Network ‚Üí Routes.
-‚Üí **192.168.71.2**
+OpenWrt Web UI ‚Ü?Network ‚Ü?Routes.
+‚Ü?**192.168.71.2**
 
 ### Q5: Firewall port forwarding rule count
-Network ‚Üí Firewall ‚Üí Port Forwards tab.
-‚Üí **17**
+Network ‚Ü?Firewall ‚Ü?Port Forwards tab.
+‚Ü?**17**
 
 ### Q6: OpenClash control panel login key
-Services ‚Üí OpenClash ‚Üí shows control panel login key.
-‚Üí **MCoYZFwg**
+Services ‚Ü?OpenClash ‚Ü?shows control panel login key.
+‚Ü?**MCoYZFwg**
 
 ### Q7: OpenClash LAN proxy password (SOCKS5/HTTP auth)
-OpenClash ‚Üí Override Settings ‚Üí General Settings ‚Üí scroll to bottom.
-‚Üí **WAMqotI9**
+OpenClash ‚Ü?Override Settings ‚Ü?General Settings ‚Ü?scroll to bottom.
+‚Ü?**WAMqotI9**
 
 ### Q8: OpenClash subscription URL
-OpenClash ‚Üí Config Subscription.
-‚Üí **https://www.amrth.cloud/s/FnT83dutLWlF5via?clash=2**
+OpenClash ‚Ü?Config Subscription.
+‚Ü?**https://www.amrth.cloud/s/FnT83dutLWlF5via?clash=2**
 
-### Q9: "È¶ôÊ∏Ø501 ‰∏≠Áªß Âä®ÊÄÅ" proxy node service port
-OpenClash ‚Üí Config Management ‚Üí find node "È¶ôÊ∏Ø501".
-‚Üí **42001**
+### Q9: "È¶ôÊ∏Ø501 ‰∏≠Áªß Âä®ÊÄ? proxy node service port
+OpenClash ‚Ü?Config Management ‚Ü?find node "È¶ôÊ∏Ø501".
+‚Ü?**42001**
 
 ### Q10: opkg system image source config file absolute path
-System ‚Üí Software ‚Üí opkg configuration.
-‚Üí **/etc/opkg/distfeeds.conf**
+System ‚Ü?Software ‚Ü?opkg configuration.
+‚Ü?**/etc/opkg/distfeeds.conf**
 
 ## Key Takeaways
-- **MobaXterm master password unlocks everything**: Password `mobapass00` from Â§áÂøòÂΩï reveals all stored SSH credentials
+- **MobaXterm master password unlocks everything**: Password `mobapass00` from Â§áÂøòÂΩ?reveals all stored SSH credentials
 - **OpenWrt default management**: Usually on port 80, but here customized to 8080
 - **OpenClash forensics**: Subscription URLs reveal VPN/proxy service usage; LAN proxy passwords show shared access
 - **Port forwarding rules**: Critical for understanding how cloud phones are exposed externally
 - **Soft router = PC-based router**: OpenWrt running in VM, managed via SSH and web UI
-- **Nested analysis**: PVE VM ‚Üí OpenWrt ‚Üí forensic tool must support nested evidence
+- **Nested analysis**: PVE VM ‚Ü?OpenWrt ‚Ü?forensic tool must support nested evidence
 
 ## Answer
 Q1: OP2024fic
