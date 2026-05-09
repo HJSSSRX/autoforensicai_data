@@ -5,6 +5,12 @@ sections:
     count: 1
     kinds:
     - .md
+  competitions:
+    count: 5
+    kinds:
+    - .md
+    - .xlsx
+    - .yaml
   problems:
     count: 52
     kinds:
@@ -14,18 +20,19 @@ sections:
     kinds:
     - .yaml
   skills:
-    count: 10
+    count: 60
     kinds:
     - .md
   solved:
-    count: 21
+    count: 80
     kinds:
     - .md
+    - .yaml
   techniques:
     count: 11
     kinds:
     - .yaml
   wp_index:
-    count: 7
+    count: 8
     kinds:
     - .md
