@@ -32,26 +32,43 @@ pip install pyyaml
 
 ```
 knowledge/
-├── solved/    21 篇结构化题解（可搜索、可复用）
+├── solved/         22 篇结构化题解（可搜索、可复用）
 │   ├── 2022_changancup_*.md      # 2022 长安杯（计算机/手机/服务器）
 │   ├── 2024fic_*.md              # 2024 FIC 决赛（6 个板块）
 │   ├── 2026fic_*.md              # 2026 FIC
 │   └── pattern_*.md              # 通用解题套路（AES/微信/隐写/挂载...）
 │
-├── skills/    10 篇工具速查与技巧
+├── skills/         10 篇工具速查与技巧
 │   ├── competition_playbook.md   # 比赛实战手册
 │   ├── computer/                 # Volatility、注册表取证
 │   ├── network/                  # WebShell 流量分析
 │   └── web/                      # 宝塔面板取证
 │
-├── cards/     1 篇外部资源索引
+├── cards/          外部资源索引
 │   └── forensics_wiki_writeup_index.md
 │
-└── wp_index/  8 场比赛题目索引
-    ├── FIC-2024决赛.md / FIC-2025初赛.md / FIC-2025决赛.md
-    ├── 平航杯-2025初赛.md
-    ├── 盘古石-2025晋级赛.md
-    └── 美亚杯-2024团队赛.md / 美亚杯-2025资格赛.md
+├── wp_index/       8 场比赛题目索引
+│   ├── FIC-2024决赛.md / FIC-2025初赛.md / FIC-2025决赛.md
+│   ├── 平航杯-2025初赛.md / 盘古石-2025晋级赛.md
+│   └── 美亚杯-2024团队赛.md / 美亚杯-2025资格赛.md
+│
+├── problems/       52 张题目卡（v0.5+ 新增）
+│   ├── computer/   # 各板块 question card
+│   ├── mobile/     # 含官方答案 vs 我们答案 + 差距分析
+│   └── server/
+│
+├── techniques/     11 张技巧卡（v0.5+ 新增）
+│   └── *.yaml      # Volatility, BitLocker, 微信解密, 钱包还原...
+│
+└── retrospectives/ 19 篇赛后复盘 (v0.5+ 新增, 多机贡献区)
+    ├── INDEX.yaml                          # 自动生成, 不要手改
+    ├── 20260509_C01__A_main.yaml          # A 机视角
+    ├── 20260509_C01__B_second.yaml        # 同题 B 机视角 (双保留)
+    └── ...
+
+cases/              历史案件特化资源（脚本/产物/wp_batches）
+├── 2025平航杯/      # 139 个 artifacts + 14 个 wp_batches
+└── 2026FIC/         # 6 个文档 + disk_map
 ```
 
 ---
@@ -181,3 +198,37 @@ grep -rl "wechat\|微信" knowledge/
 
 知识库内容以 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 许可共享。
 搜索脚本以 MIT 许可发布。
+
+
+---
+
+## 🤝 多机协作 (v0.5+)
+
+### 背景
+本仓库设计为**多台 AI 机器同时贡献**. 为避免合并冲突, 必须遵守:
+
+### 文件命名规则
+所有 etrospectives/ 复盘必须带机器 ID 后缀:
+```
+✓ 20260509_C01_os_version__A_main.yaml      ← A 机贡献
+✓ 20260509_C01_os_version__B_second.yaml    ← B 机同题不同视角 (合并不冲突)
+✗ 20260509_C01_os_version.yaml              ← 缺机器后缀, 多机时必冲突
+```
+
+### INDEX 自动生成
+INDEX.yaml / INDEX.md 由 [	ools/build_kb_index.py](https://github.com/HJSSSRX/xiaokon_autoforensicai/blob/main/tools/build_kb_index.py) 自动重建.
+**不要手改**, pre-commit hook 会拒绝.
+
+### 上手步骤 (新机器)
+1. clone 框架库: `git clone https://github.com/HJSSSRX/xiaokon_autoforensicai`
+2. 运行: `python tools/setup_machine.py` (设 MACHINE_ID + 装 hooks)
+3. 在框架库加 data remote: `git remote add data file:///path/to/autoforensicai_data`
+4. 写新复盘到 `knowledge/retrospectives/<日期>_<编号>__<MACHINE_ID>.yaml`
+5. 一键 push 三库: `python tools/safe_push.py`
+
+完整规则: [docs/MULTI_MACHINE_CONTRIBUTION.md](https://github.com/HJSSSRX/xiaokon_autoforensicai/blob/main/docs/MULTI_MACHINE_CONTRIBUTION.md)
+
+### 三库联动
+- **本仓库 (utoforensicai_data)**: 知识 + 案件资料 (本仓库, 多机共写)
+- **框架库 (xiaokon_autoforensicai)**: 工具代码 + 火眼适配 + Hub
+- **全量库 (xiaokon-all)**: 两者合并的快速部署镜像

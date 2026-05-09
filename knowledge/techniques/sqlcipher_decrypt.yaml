@@ -1,0 +1,54 @@
+slug: sqlcipher_decrypt
+name: SQLCipher 加密 SQLite 解密
+category: 数据库 / 移动取证
+when_to_use:
+- 看到 .db / .sqlite 文件 sqlite3 报错 'file is not a database'
+- Android IM 应用 (uuutalk / WeChat / WhatsApp / Telegram) 的聊天数据库
+- iOS 应用类似情况
+detect_signal:
+- file <db> 显示『data』而不是『SQLite 3.x database』
+- 前 16 字节不是 'SQLite format 3\0'
+- 应用包名 + 数据库文件名通常包含 wk_ / e_ / encrypted_ 前缀
+algorithm: 'SQLCipher 默认用 PBKDF2-HMAC-SHA1/SHA256 派生 key, AES-256-CBC 加密
+
+  密码通常硬编码在 APK / 二进制 / 用户输入派生 / 文件名本身 (本次比赛 uuutalk 用文件名 32 位 hex)'
+script:
+  lang: bash
+  code: '# Linux (ubuntu): apt install sqlcipher
+
+    sqlcipher wk_xxxxx.db <<EOF
+
+    PRAGMA key = ''xxxxx'';  -- 32位hex去掉wk_
+
+    .tables
+
+    SELECT * FROM message LIMIT 10;
+
+    .dump
+
+    EOF
+
+
+    # Python
+
+    from pysqlcipher3 import dbapi2 as sqlite
+
+    conn = sqlite.connect(''wk_xxxxx.db'')
+
+    c = conn.cursor()
+
+    c.execute("PRAGMA key=''xxxxx''")
+
+    c.execute(''SELECT * FROM message LIMIT 5'')
+
+    '
+seen_in:
+- FIC2026_INITIAL_M_Q4
+- FIC2026_INITIAL_M_Q5
+- FIC2026_INITIAL_M_Q6
+common_pitfalls:
+- ❌ 用普通 sqlite3 cli (没编译 sqlcipher 支持)
+- ❌ 密码错误时 PRAGMA key 不会立刻报错, 要 .tables 才发现
+- ❌ KDF 迭代数版本差异 (sqlcipher 3 vs 4 默认不同, 用 PRAGMA cipher_compatibility = 3)
+related_techniques: []
+install: apt install sqlcipher / pip install pysqlcipher3

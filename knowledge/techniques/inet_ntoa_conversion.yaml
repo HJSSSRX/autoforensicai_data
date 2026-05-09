@@ -1,0 +1,41 @@
+slug: inet_ntoa_conversion
+name: 整数 IP ↔ IPv4 字符串转换
+category: 数据库 / 网络
+when_to_use:
+- 数据库表字段名带 _ip / ip_int / ipaddr 但值是整数
+- 看到 user_last_login_ip / user_reg_ip 是数字 (e.g. 859467171)
+- Discuz / WordPress / maccms / phpBB 这类老 CMS 系统
+detect_signal:
+- DESCRIBE 表显示该字段是 int unsigned (4字节)
+- 字段值是整数 (0 ~ 4294967295) 而不是 dotted notation
+algorithm: IPv4 = a.b.c.d → 整数 = a*256^3 + b*256^2 + c*256 + d (大端)
+script:
+  lang: sql
+  code: '-- MySQL / MariaDB / TiDB
+
+    SELECT inet_ntoa(user_last_login_ip) AS ip_str FROM mac_user;
+
+    SELECT inet_aton(''192.168.1.1'') AS ip_int;  -- 反向
+
+
+    -- PostgreSQL
+
+    SELECT host(inet ''192.168.1.1'');
+
+
+    -- Python
+
+    import socket, struct
+
+    ip_str = socket.inet_ntoa(struct.pack(''!I'', 859467171))
+
+    ip_int = struct.unpack(''!I'', socket.inet_aton(''51.43.21.163''))[0]
+
+    '
+seen_in:
+- FIC2026_INITIAL_S_Q15
+common_pitfalls:
+- ❌ 直接读整数当 IP
+- ❌ 字节序搞反 (必须大端 '!I' / 网络字节序)
+related_techniques:
+- maccms_internals

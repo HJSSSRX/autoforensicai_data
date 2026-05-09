@@ -1,0 +1,53 @@
+qid: FIC2026_INITIAL_S_Q10
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 10
+question: 该网站的伪静态规则配置文件sm3值为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：ABC123】
+question_type: sha256
+expected_format: ''
+keywords:
+- 伪静态
+- nginx
+- sm3
+- rewrite
+- default
+official_answer: e73407468e6f52af54c7b14632eeeb9be25b05106d06c4c3085fc843c223793f
+our_actual_answer: 5A6C86366041509A0A9A31B72A341372182E00F4C9DF6A6AE34CC5E779639C54
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: openssl dgst -sm3 /etc/nginx/sites-enabled/default (伪静态规则在 nginx 配置)
+solution_steps:
+- 1. 题目『伪静态规则配置文件』 → 落在 nginx 站点配置 (rewrite 规则)
+- 2. cat /etc/nginx/sites-available/default 或 sites-enabled/default
+- 3. 确认含 location ~* / rewrite ... 等典型 URL 重写规则
+- 4. openssl dgst -sm3 /etc/nginx/sites-enabled/default
+- 5. 得到 e73407468e6f52af54c7b14632eeeb9be25b05106d06c4c3085fc843c223793f
+tools:
+- openssl (dgst -sm3)
+script_snippets:
+- lang: bash
+  purpose: SM3 哈希
+  code: 'openssl dgst -sm3 /etc/nginx/sites-enabled/default
+
+    # 或
+
+    gmssl sm3 /etc/nginx/sites-enabled/default'
+common_mistakes:
+- ❌ 算了 maccms.conf 或 maccms.php 的 SM3 (那不是伪静态)
+- ❌ 算了 nginx.conf (主配置, 不是站点伪静态)
+- ❌ 用 sha256 不是 sm3
+lessons:
+- 🎯 伪静态规则 (URL rewrite) 永远在 web server 站点配置, 不在 PHP 应用内
+- '🎯 nginx 路径: sites-available/<site> → 软链 sites-enabled/<site>'
+- 🎯 SM3 = 国密哈希 = openssl dgst -sm3 (要 openssl ≥ 1.1.1, 否则用 gmssl)
+- '🎯 看『xx 规则配置文件 sm3 值』分两步: 先确认正确文件 → 再算哈希'
+related_techniques:
+- sm3_hash
+- nginx_rewrite_inspection
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

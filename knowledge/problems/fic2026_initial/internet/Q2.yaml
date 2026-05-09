@@ -1,0 +1,56 @@
+qid: FIC2026_INITIAL_I_Q2
+competition: FIC
+year: 2026
+stage: initial
+category: internet
+question_no: 2
+question: 备份数据库中视频图片的文件名为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：abc.png】
+question_type: text
+expected_format: ''
+keywords:
+- 备份数据库
+- 视频图片
+- mac_vod
+- lxc-attach
+- TiDB
+official_answer: 7b3fdd9d464ce48e7f20cd45f918c9a6.jpg
+our_actual_answer: 5ab3e871df0e987841788fed4ef3c9d9.jpg
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: lxc-attach mytidb → SQL mac_vod 表的 vod_pic 字段
+solution_steps:
+- 1. 题目说『备份数据库』 = 服务器 4000 端口的 TiDB (Q13 已确认)
+- 2. 不要在 /etc/mysql 找 — 那是主库
+- 3. lxc-ls -f 看到 mytidb 容器
+- 4. lxc-attach -n mytidb -- bash → 进容器
+- 5. 容器内 mysql -h 127.0.0.1 -P 4000 -u root <db>
+- 6. SHOW TABLES → 看到 mac_vod 表
+- 7. SELECT vod_pic FROM mac_vod LIMIT 5;
+- 8. 找出 .jpg 文件名 = 7b3fdd9d464ce48e7f20cd45f918c9a6.jpg
+tools:
+- lxc-attach
+- mysql client (TiDB 兼容)
+script_snippets:
+- lang: bash
+  purpose: 进 TiDB 容器查 mac_vod
+  code: "lxc-attach -n mytidb -- mysql -h 127.0.0.1 -P 4000 -u root \\\n    -e 'SELECT vod_id, vod_name,\
+    \ vod_pic FROM <db>.mac_vod LIMIT 10;'"
+common_mistakes:
+- ❌ 在主库 (3306) 查 mac_vod (主库的不是『备份』)
+- ❌ 没意识到 maccms 的图片字段叫 vod_pic 不是 vod_img
+- ❌ 容器外 ping 不到 mytidb (lxc 网络隔离, 必须 lxc-attach 进去)
+lessons:
+- '🎯 备份数据库的访问路径: 找运行的容器/服务 → lxc-attach 进 → 内部连接'
+- '🎯 maccms 表 mac_vod 字段: vod_id (主键), vod_name (片名), vod_pic (封面 URL/文件名)'
+- '🎯 区分『主库』和『备份库』: 不同端口 (3306 vs 4000) / 不同容器 (host vs lxc)'
+- 🎯 lxc-attach -n <容器> -- <命令> 一行执行
+related_techniques:
+- lxc_attach
+- maccms_internals
+related_problems:
+- FIC2026_INITIAL_S_Q11
+- FIC2026_INITIAL_S_Q13
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

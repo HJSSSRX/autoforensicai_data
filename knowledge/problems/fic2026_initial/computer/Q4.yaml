@@ -1,0 +1,72 @@
+qid: FIC2026_INITIAL_C_Q4
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 4
+question: 分析计算机检材，推广设计图中的apk下载链接为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：http:///?*】
+question_type: url
+expected_format: ''
+keywords:
+- 推广设计图
+- apk下载链接
+- RSA
+- Fermat分解
+- 二维码
+- public.txt
+- 弱密钥
+- 钓鱼推广
+official_answer: https://drive.google.com/file/d/1z3aRS-lkaJYKm7Cp1XjtUmVPsOEVW2fV/view?usp=sharing
+our_actual_answer: https://dl.sp-live88.com/update/latest.apk
+our_confidence: medium
+result: incorrect
+verification_status: unverified
+method_summary: 搜推广设计图 → .enc + decrypt.html + public.txt → RSA Fermat 分解 → 解密 → 扫二维码
+solution_steps:
+- 1. 火眼/Everything 全盘搜 "推广设计图", 命中 .enc 加密图片
+- 2. 同目录发现 decrypt.html (前端解密页面) + public.txt (n + e=65537)
+- 3. public.txt 解析: 大整数 n + e=65537 → 公钥, 缺 d
+- 4. 观察 n 接近完全平方 (出题人故意 p ≈ q 弱密钥) → Fermat 分解
+- 5. Python `from math import isqrt; a=isqrt(n)+1; ...` 算 p, q
+- 6. d = pow(e, -1, (p-1)*(q-1))
+- 7. 把 n, d 输入 decrypt.html (浏览器打开) → 解密 .enc → PNG 二维码
+- 8. 扫码 → 得到 Google Drive 链接
+tools:
+- 火眼 / Everything (关键词全盘搜索)
+- Python (math.isqrt)
+- 浏览器 (运行 decrypt.html)
+- 二维码扫描 (微信/草料二维码)
+script_snippets:
+- lang: python
+  purpose: Fermat 分解 + 算 d
+  code: |
+    from math import isqrt
+    n = <从 public.txt 读>
+    e = 65537
+    a = isqrt(n) + 1
+    while True:
+        b2 = a*a - n
+        b = isqrt(b2)
+        if b*b == b2:
+            p, q = a-b, a+b
+            break
+        a += 1
+    d = pow(e, -1, (p-1)*(q-1))
+    print(d)
+common_mistakes:
+- ❌ 误以为答案是 APP 内 update_url (`https://dl.sp-live88.com/update/latest.apk`); 那是 mobile Q15 解 config.dat 的字段, 是诱饵
+- ❌ 没意识到 "推广设计图" 特指 PC 上的图片 (二维码 + RSA 加密), 不是 APP 内 URL
+- ❌ 没尝试 Fermat (默认大整数分解都很慢) → 实际 p≈q 时秒解
+lessons:
+- 🎯 题目 "设计图" 三字 = 强提示图片 + 隐写/二维码/加密 (不是配置文件)
+- 🎯 同目录的 .html/.py 解密脚本是强信号 → 找密钥即可
+- 🎯 p≈q 弱密钥的标志: n 的位数 ≈ 2 * sqrt(n) 的位数, 且 sqrt(n) 后立即试探就成功
+- 🎯 跨检材诱饵: APP 内 URL 看着对但是错答, 比赛设计的是 PC 上独立的二维码
+related_techniques:
+- rsa_fermat
+- qrcode_decode
+related_problems:
+- FIC2026_INITIAL_M_Q15  # mobile config.dat 含相同 update_url, 是诱饵
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

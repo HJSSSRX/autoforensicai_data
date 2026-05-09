@@ -1,0 +1,31 @@
+# Auto-generated. Do not hand-edit.
+_generated_by: tools/build_kb_index.py
+sections:
+  cards:
+    count: 1
+    kinds:
+    - .md
+  problems:
+    count: 52
+    kinds:
+    - .yaml
+  retrospectives:
+    count: 19
+    kinds:
+    - .yaml
+  skills:
+    count: 10
+    kinds:
+    - .md
+  solved:
+    count: 21
+    kinds:
+    - .md
+  techniques:
+    count: 11
+    kinds:
+    - .yaml
+  wp_index:
+    count: 7
+    kinds:
+    - .md

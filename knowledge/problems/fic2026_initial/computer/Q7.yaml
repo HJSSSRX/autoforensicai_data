@@ -1,0 +1,54 @@
+qid: FIC2026_INITIAL_C_Q7
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 7
+question: 分析计算机检材，李安弘电脑中AI软件当前使用的模型apiKey为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】【参考格式：sk-abcd...】
+question_type: text
+expected_format: ''
+keywords:
+- UOSAI
+- apiKey
+- 配置数据库
+- sqlite
+- llm
+official_answer: (UOSAI db 中真实 apikey)
+our_actual_answer: 不存在（lha 使用网页版无 apiKey）
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: 搜 UOS 配置文件 → llm 表的 apikey 字段
+solution_steps:
+- 1. UOS AI 设置 GUI 看到 apiKey 被打码, 拿不到完整值
+- 2. find / -iname '*UOSAI*' 或 find ~ -iname '*UOS*' 找配置目录
+- 3. 通常在 ~/.config/uos-ai/ 或 ~/.local/share/uos-ai/
+- 4. 大小降序看, 找到 sqlite db 文件
+- 5. sqlite3 <db> '.tables' 看到 llm 表
+- 6. SELECT * FROM llm; → 拿到 apikey 字段完整值
+tools:
+- sqlite3 CLI
+- find / locate
+script_snippets:
+- lang: bash
+  purpose: 找 AI 软件配置 db
+  code: 'find ~ -iname ''*UOS*'' -size +10k 2>/dev/null | head -20
+
+    # 或
+
+    find ~/.config ~/.local -name ''*.db'' -o -name ''*.sqlite*'' 2>/dev/null | xargs -I{} sh -c ''echo
+    {}; sqlite3 {} ".tables" 2>/dev/null'''
+common_mistakes:
+- ❌ 答『不存在/网页版无 apiKey』(漏看 GUI 仅打码, 配置文件里有原文)
+- ❌ 只看 GUI 不去翻配置 db
+lessons:
+- 🎯 GUI 打码 ≠ 不存在, 永远去翻底层 sqlite/json/yaml 配置
+- 🎯 Linux AI 软件配置 99% 在 ~/.config/<appname>/ 或 ~/.local/share/<appname>/
+- '🎯 sqlite db 里搜表名: llm/api_key/key/credential/auth/token'
+related_techniques:
+- llm_app_config_inspect
+related_problems:
+- FIC2026_INITIAL_C_Q6
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

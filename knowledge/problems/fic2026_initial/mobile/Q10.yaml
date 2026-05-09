@@ -1,0 +1,58 @@
+qid: FIC2026_INITIAL_M_Q10
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 10
+question: 分析手机检材，李安弘曾使用无人机航拍,分析其飞行轨迹，其在哪个县进行飞行【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：平安县】
+question_type: text
+expected_format: ''
+keywords:
+- DJI
+- FlightRecord
+- 无人机
+- 飞行轨迹
+- 经纬度
+- 米脂县
+- pydjirecord
+official_answer: 米脂县
+our_actual_answer: 西安市未央区
+our_confidence: medium
+result: incorrect
+verification_status: unverified
+method_summary: DJI FlightRecord *.txt → pydjirecord 库解析 → 经纬度 (37.7966, 110.3707) → 反查米脂县
+solution_steps:
+- 1. 火眼/Everything 搜 'DJI' / 'FlightRecord' / '.txt' 在 DJI fly app 数据目录
+- 2. 找到 DJI/FlightRecord/*.txt (DJI 加密二进制日志, 文本扩展名误导)
+- 3. pip install pydjirecord
+- '4. Python: from pydjirecord import DJILog; log = DJILog.from_bytes(data)'
+- 5. log.version >= 13 时需要 DJI API key (官方申请) 解密 frames
+- 6. 提取 frame.osd.latitude / longitude → 得到 (37.7966, 110.3707)
+- 7. 反查行政区 (百度地图 API / GeoNames) → 米脂县 (陕西榆林)
+tools:
+- pydjirecord (pip)
+- 百度地图 API / 高德地图反查行政区
+script_snippets:
+- lang: python
+  purpose: DJI 日志解析
+  code: "from pydjirecord import DJILog\nimport os\n\ndata = open('FlightRecord_xxx.txt', 'rb').read()\n\
+    log = DJILog.from_bytes(data)\nprint(f'version={log.version}')\n\napi_key = os.environ.get('DJI_API_KEY')\n\
+    if log.version >= 13 and not api_key:\n    print('需要 DJI API key')\nelse:\n    keychains = log.fetch_keychains(api_key)\
+    \ if log.version >= 13 else None\n    for f in log.frames(keychains):\n        if f.osd and f.osd.latitude:\n\
+    \            print(f.osd.latitude, f.osd.longitude)\n            break"
+common_mistakes:
+- ❌ 看到 .txt 扩展名以为是文本 → 直接 cat 看到乱码
+- ❌ 答省/市/区, 题目要『县』 → 中国行政区严格 县/区/市辖区
+- ❌ 用了已知 lat/lon 但反查工具不准 (用百度/高德 API 严格)
+lessons:
+- 🎯 DJI FlightRecord 是加密二进制即使后缀 .txt
+- 🎯 pydjirecord 在 v13+ 需要 DJI API key, header/details 不需要
+- '🎯 中国行政区精度: 省 > 市 > 县/区, 题目用『县』就严格答县级 (e.g. 米脂县, 不是榆林市)'
+- 🎯 lat 37.7966, lon 110.3707 落在陕西榆林米脂县
+related_techniques:
+- dji_flightrecord_parse
+- gis_reverse_lookup
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

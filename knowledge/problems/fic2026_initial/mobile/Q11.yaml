@@ -1,0 +1,29 @@
+qid: FIC2026_INITIAL_M_Q11
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 11
+question: 分析手机检材，李安弘最近安装了一个视频类APP，该APP声明了多个敏感权限用于收集用户隐私。请选择其中涉及用户隐私的敏感权限。
+question_type: multi_choice
+expected_format: ''
+keywords:
+- 李安弘最近安装了一个视频类APP
+- 该APP声明了多个敏感权限用于收集用户隐私
+- 请选择其中涉及用户隐私的敏感权限
+official_answer: A,B,D
+our_actual_answer: A,B,D
+our_confidence: medium
+result: correct
+verification_status: unverified
+method_summary: AndroidManifest.xml 看 permissions
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

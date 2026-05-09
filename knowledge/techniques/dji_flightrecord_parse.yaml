@@ -1,0 +1,35 @@
+slug: dji_flightrecord_parse
+name: DJI FlightRecord 解析
+category: 二进制日志
+when_to_use:
+- 题目涉及无人机飞行轨迹/经纬度/起降点/时间
+- 检材中找到 .txt 文件但 cat 是乱码 (DJI 加密二进制)
+- DJI/FlightRecord/ 或 ~/DJI/Fly/Records/ 目录下文件
+detect_signal:
+- 文件 magic 是特定字节 (非纯文本)
+- DJI 应用数据库内有 fly_record 关联
+- '题目关键词: DJI / 大疆 / 无人机 / 航拍 / 轨迹'
+algorithm: 'DJI FlightRecord 是分层结构: header (元数据) + 多个 frame (按时间序列)
+
+  每个 frame 有 osd (OSD 数据: lat/lon/alt/speed/...) 等子结构
+
+  v13+ 版本 frame 数据被 keychain 加密, 需要 DJI 官方 API key 解密
+
+  header/details 任何版本都不需要 key'
+script:
+  lang: python
+  code: "from pydjirecord import DJILog\nimport os\n\ndata = open('FlightRecord_xxx.txt', 'rb').read()\n\
+    log = DJILog.from_bytes(data)\nprint(f'version={log.version}, details={log.details}')\n\napi_key =\
+    \ os.environ.get('DJI_API_KEY')  # 申请: dji.com/cn/developer\nkeychains = log.fetch_keychains(api_key)\
+    \ if log.version >= 13 else None\nfor f in log.frames(keychains):\n    osd = f.osd\n    if osd and\
+    \ osd.latitude not in (None, 0.0):\n        print(osd.latitude, osd.longitude, osd.altitude)\n"
+seen_in:
+- FIC2026_INITIAL_M_Q10
+common_pitfalls:
+- ❌ 看到 .txt 后缀以为是文本
+- ❌ v13+ 没有 API key 时 frames() 抛异常
+- ❌ 经纬度 0.0/NaN 是无效采样, 要过滤
+- ❌ 反查行政区不准确 (用百度/高德 API, 别用 OpenStreetMap)
+related_techniques:
+- gis_reverse_lookup
+install: pip install pydjirecord

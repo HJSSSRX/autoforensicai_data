@@ -1,0 +1,28 @@
+qid: FIC2026_INITIAL_M_Q12
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 12
+question: 上述APP启动后会加载一个色情网站。请找出该APP当网络不可用时APP加载的本地离线页面路径。【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】
+question_type: url
+expected_format: ''
+keywords:
+- 上述APP启动后会加载一个色情网站
+- 请找出该APP当网络不可用时APP加载的本地离线页面路径
+official_answer: file:///android_asset/www/index.html
+our_actual_answer: file:///android_asset/www/index.html
+our_confidence: medium
+result: correct
+verification_status: unverified
+method_summary: MainActivity onCreate WebView 离线加载分支
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

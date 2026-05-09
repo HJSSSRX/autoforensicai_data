@@ -1,0 +1,28 @@
+qid: FIC2026_INITIAL_B_Q5
+competition: FIC
+year: 2026
+stage: initial
+category: binary
+question_no: 5
+question: 分析U盘检材，找到被加密的交易记录，统计李安弘虚拟币收款地址钱包总收款金额为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：1.00】
+question_type: number
+expected_format: ''
+keywords:
+- 找到被加密的交易记录
+- 统计李安弘虚拟币收款地址钱包总收款金额为
+official_answer: '186948.09'
+our_actual_answer: '186948.09'
+our_confidence: high
+result: correct
+verification_status: verified
+method_summary: RC4 解 vc → vc.vhd → 挂载 NTFS → openpyxl 计算收款地址总额 70 条
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

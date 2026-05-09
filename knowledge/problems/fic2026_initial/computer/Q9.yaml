@@ -1,0 +1,59 @@
+qid: FIC2026_INITIAL_C_Q9
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 9
+question: 分析计算机检材，李安弘电脑中记录的存放黄金的保险柜编号是 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：1】
+question_type: number
+expected_format: ''
+keywords:
+- 保险柜编号
+- MP4加密
+- stco
+- '1337'
+- VC容器内文件
+official_answer: '997546'
+our_actual_answer: （vc 容器内, 待解密 VHD）
+our_confidence: low
+result: incorrect
+verification_status: unverified
+method_summary: VC 解密 → 看到加密 mp4 → 反汇编 main.a 发现 stco 表每个 chunk_offset += 1337 → 减 1337 解密 → 打开 mp4 看密码
+solution_steps:
+- 1. 接 Q8 思路, VC 解密后看到 .hidden + 2 个 mp4
+- 2. 直接打开 mp4 失败 (被 get_token_linux 加密过)
+- 3. IDA 跟进 main.a 函数 (mp4 加密逻辑)
+- '4. 关键代码: 找 mp4 中的 stco box (sample table chunk offsets) → 每个 4 字节 chunk_offset 加 1337'
+- 5. 解密 = 减 1337, 写 Python 脚本批量改 stco 表
+- 6. 解密后 mp4 可正常播放, 视频内显示保险柜编号 `997546`
+tools:
+- IDA Pro
+- Python (struct)
+- MP4 player (VLC)
+script_snippets:
+- lang: python
+  purpose: MP4 stco 解密 (减 1337)
+  code: "import struct\nfrom pathlib import Path\n\nKEY = 0x539  # 1337\n\ndef decrypt(path: Path):\n\
+    \    data = bytearray(path.read_bytes())\n    idx = data.find(b'stco')\n    if idx == -1:\n      \
+    \  return\n    entry_count = struct.unpack('>I', data[idx+8:idx+12])[0]\n    for i in range(entry_count):\n\
+    \        pos = idx + 12 + i*4\n        old = struct.unpack('>I', data[pos:pos+4])[0]\n        if old\
+    \ >= KEY:\n            data[pos:pos+4] = struct.pack('>I', old - KEY)\n    path.with_name(path.stem\
+    \ + '_dec.mp4').write_bytes(data)"
+common_mistakes:
+- ❌ 没读 main.a, 不知道 stco 是被加密的位置
+- ❌ 改 stco 时忘了 big-endian (mp4 box 数据是大端)
+- ❌ 试图用通用 mp4 修复工具 (untrunc/MP4Box) → 不行, 因为 chunk_offset 全偏移了
+lessons:
+- 🎯 mp4 box 结构 stco = chunk_offset table, 是常见隐藏点 (改 offset 让播放失败但 metadata 还在)
+- '🎯 stco 加密常见模式: 每个 offset ± 固定值 (1337 / 4096 / 0x10000)'
+- 🎯 mp4 box header (4字节大小 + 4字节类型) → 大端 unpack '>I'
+- 🎯 程序逆向中看 main.a / main.encrypt 类函数名, Go 习惯把功能拆到 a/b/c 单字母函数
+related_techniques:
+- mp4_stco_encryption
+- go_program_reversing
+related_problems:
+- FIC2026_INITIAL_C_Q8
+- FIC2026_INITIAL_C_Q10
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

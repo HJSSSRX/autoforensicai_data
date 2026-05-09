@@ -1,0 +1,29 @@
+qid: FIC2026_INITIAL_B_Q1
+competition: FIC
+year: 2026
+stage: initial
+category: binary
+question_no: 1
+question: 分析U盘检材，找到其中保存的加密程序SampleVC.exe，请给出这个exe程序的md5值？ 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 （答案格式：c4ca4238a0b923820dcc509a6f75849b）
+question_type: md5
+expected_format: ''
+keywords:
+- 找到其中保存的加密程序SampleVC
+- exe
+- 请给出这个exe程序的md5值
+official_answer: 764789dd9c095d74b6b258cf0f7568b2
+our_actual_answer: 764789dd9c095d74b6b258cf0f7568b2
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: U盘 SampleVC.exe → certutil/md5sum
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

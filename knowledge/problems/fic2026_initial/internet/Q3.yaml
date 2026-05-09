@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_I_Q3
+competition: FIC
+year: 2026
+stage: initial
+category: internet
+question_no: 3
+question: ngrok提供的域名为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：a.b.c】
+question_type: text
+expected_format: ''
+keywords:
+- ngrok提供的域名为
+official_answer: blemish-junior-unengaged.ngrok-free.dev
+our_actual_answer: blemish-junior-unengaged.ngrok-free.dev
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: ngrok http 80 看动态分配域名
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

@@ -1,0 +1,34 @@
+# ─── autoforensicai_data runtime / personal state ───
+# 任何贡献者本地的草稿、缓存、机器配置都不入仓库
+
+# 草稿 / 个人笔记
+*.draft.md
+*.draft.yaml
+progress.txt
+worklog/personal_*.md
+
+# 缓存
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# 机器配置 (双保险, 应该在 ~/.config 里)
+machine.txt
+.machine_id
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*~
+
+# 数据库 / 临时文件 (如果有人误把案件 db 文件放这里)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+
+# 系统文件
+.DS_Store
+Thumbs.db

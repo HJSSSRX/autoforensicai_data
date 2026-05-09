@@ -1,0 +1,58 @@
+qid: FIC2026_INITIAL_S_Q15
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 15
+question: 马慧美最后一次登录该网站的ip为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：1.1.1.1】
+question_type: ip
+expected_format: ''
+keywords:
+- 最后登录
+- ip
+- mac_user
+- user_last_login_ip
+- inet_ntoa
+- TiDB
+official_answer: 51.43.21.163
+our_actual_answer: 192.168.226.1
+our_confidence: high
+result: incorrect
+verification_status: verified
+method_summary: SELECT inet_ntoa(user_last_login_ip) FROM mac_user WHERE user_name LIKE 'Ma Hui Mei'
+solution_steps:
+- 1. 进 maccms 数据库 (3306 端口主库, 不是 4000 备份)
+- 2. DESCRIBE mac_user; → 注意 user_last_login_ip 是 int unsigned (4字节整数)
+- 3. 直接 SELECT user_last_login_ip → 输出整数 e.g. 859467171
+- 4. 必须用 inet_ntoa() 转为 IPv4 字符串
+- '5. SQL: SELECT inet_ntoa(user_last_login_ip) FROM mac_user WHERE user_name LIKE ''Ma Hui Mei'';'
+- 6. 得到 51.43.21.163
+tools:
+- mysql / TiDB client
+script_snippets:
+- lang: sql
+  purpose: 查最后登录 IP
+  code: 'SELECT user_name, inet_ntoa(user_last_login_ip) AS last_ip
+
+    FROM mac_user
+
+    WHERE user_name LIKE ''Ma Hui Mei'';'
+common_mistakes:
+- ❌ 直接 cat /var/log/nginx/access.log 推断 (那只是访问日志, 不是用户表)
+- ❌ 答 192.168.226.1 / 内网 IP (可能是日志里的, 不是 mac_user 表的)
+- ❌ SELECT user_last_login_ip 看到整数没转 IP
+- ❌ 用 user_name = 'Ma Hui Mei' 严格相等 (有空格/大小写, 用 LIKE 更稳)
+lessons:
+- 🎯 maccms / Discuz / WordPress 都把 IPv4 存为 int unsigned (省 12 字节)
+- '🎯 SQL 转 IP: MySQL `inet_ntoa()`, MariaDB 同, PostgreSQL 用 `text(inet ''...'')`, Python `socket.inet_ntoa(struct.pack(''!I'',
+  n))`'
+- 🎯 中文姓名在英文系统里通常是拼音 (Ma Hui Mei), 用 LIKE '%Ma%Hui%Mei%' 更鲁棒
+- 🎯 看到字段名带 _ip, 数据是整数 → 立刻 inet_ntoa()
+related_techniques:
+- inet_ntoa_conversion
+- maccms_internals
+related_problems:
+- FIC2026_INITIAL_S_Q14
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

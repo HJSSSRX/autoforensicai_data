@@ -1,0 +1,44 @@
+qid: FIC2026_INITIAL_C_Q6
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 6
+question: 分析计算机检材，李安弘电脑中AI软件当前使用的模型类型为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：deepseek】
+question_type: text
+expected_format: ''
+keywords:
+- AI软件
+- 模型类型
+- OpenRouter
+- UOSAI
+- provider
+official_answer: OpenRouter
+our_actual_answer: minimax/minimax-m2.5:free
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: UOSAI 设置 → 模型类型 (问 provider 不是 model_id)
+solution_steps:
+- 1. 桌面任务栏右下角 UOS AI 图标 → 主动确认这是 AI 软件
+- 2. 点击 UOS AI → 设置 → 模型管理
+- 3. 看到当前激活模型来自 OpenRouter (顶层 provider 名)
+- 4. 答 OpenRouter (问 provider 不是 model_id)
+tools:
+- UOS AI 桌面客户端
+- Linux 系统设置
+script_snippets: []
+common_mistakes:
+- ❌ 答 model_id 如 `minimax/minimax-m2.5:free` (这是模型本身, 不是类型/provider)
+- ❌ 在配置文件里乱猜模型 ID, 没注意到题目的『类型』中文含义
+lessons:
+- 🎯 中文题『模型类型』= provider/category (OpenAI/OpenRouter/Anthropic), 不是 model_id
+- 🎯 AI 软件 GUI 设置里『模型类型』是顶层下拉框, model_id 是次级选择
+- 🎯 看到选项类提问优先取语义最大的层级
+related_techniques:
+- llm_app_config_inspect
+related_problems:
+- FIC2026_INITIAL_C_Q7
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

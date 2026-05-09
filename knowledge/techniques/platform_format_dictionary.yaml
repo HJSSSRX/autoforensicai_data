@@ -1,0 +1,32 @@
+slug: platform_format_dictionary
+name: 比赛平台答案格式潜规则
+category: 答题策略
+when_to_use:
+- 所有题, 提交答案前必查
+detect_signal:
+- 题目末尾【参考格式：xxx】
+- 题目说【不区分大小写/空格/全半角】但仍有未提到的格式
+algorithm: 早期收集 platform_confirmed 答案, 提取格式特征, 建字典
+script:
+  lang: yaml
+  code: "# 已知 FIC 平台规则字典\ntelegram_group_id: '@FIC_2026'        # 必须带 @\nqq_group_id: '12345678'     \
+    \           # 不带 @\nwechat_group_id: 'wxid_xxxxx'\n\ndate_formats:\n  - 'YYYY/M/D'      # 不补 0, 题目参考\
+    \ '2000/1/1'\n  - 'YYYYMMDD'      # 紧凑, 题目参考 '20200101'\n  - 'YYYY-MM-DD'    # ISO, 题目参考 '2000-01-01'\n\
+    \nmultichoice:\n  - 'A,B,D'         # 逗号分隔 (FIC 习惯)\n  - 'ABD'           # 紧凑 (DID-CTF 习惯)\n  - 'A、B、D'\
+    \       # 中文顿号 (一些教育平台)\n\nurl:\n  - 完整: 'https://example.com/path?q=1'\n  - 无 query: 'https://example.com/path'\n\
+    \  - 仅 host: 'example.com'\n\nip:\n  - IPv4: '192.168.1.1'\n  - 不缩写 0 (192.168.001.001 错)\n\nhash:\n\
+    \  - 大写还是小写? 看题目参考格式样例字母大小写\n  - md5/sha1/sha256/sm3 长度: 32/40/64/64\n\nfilename:\n  - 含扩展名? (5ab3e871....jpg\
+    \ vs 5ab3e871...)\n  - 路径? (/var/log/access.log vs access.log)\n"
+seen_in:
+- FIC2026_INITIAL_I_Q1
+- FIC2026_INITIAL_S_Q14
+- FIC2026_INITIAL_M_Q11
+- FIC2026_INITIAL_S_Q16
+- FIC2026_INITIAL_S_Q17
+common_pitfalls:
+- ❌ 答 FIC_2026 缺 @
+- '❌ 日期补 0: 2026/04/15 vs 题目参考 2026/4/15'
+- ❌ 多选用错分隔符
+- ❌ hash 大小写不匹配
+related_techniques:
+- multichoice_enumeration

@@ -1,0 +1,33 @@
+slug: mp4_stco_encryption
+name: MP4 stco 偏移加密
+category: 媒体文件加密
+when_to_use:
+- mp4 文件存在但播放器无法播放 (报错 invalid frame)
+- ffprobe 显示 metadata 正常但 chunks 错位
+detect_signal:
+- ffprobe 报错 'Invalid offset' / 'EOF before chunk'
+- 二进制看 stco box 存在且 entry_count 合理
+- 知道有加密程序 (反汇编看到 stco 关键字)
+algorithm: 'MP4 box 结构: ftyp/moov/trak/mdia/minf/stbl/stco
+
+  stco = sample table chunk offsets, 每条 4 字节 big-endian 是数据 chunk 在文件中的绝对偏移
+
+  加密: 每个 offset += K (常见 K=1337/0x539, 0x10000)
+
+  解密: 每个 offset -= K'
+script:
+  lang: python
+  code: "import struct\nfrom pathlib import Path\n\ndef decrypt_stco(path: Path, key: int = 1337, sub:\
+    \ bool = True):\n    \"\"\"sub=True 减 key 解密, False 加 key 加密\"\"\"\n    data = bytearray(path.read_bytes())\n\
+    \    idx = data.find(b'stco')\n    if idx < 0:\n        return None\n    entry_count = struct.unpack('>I',\
+    \ data[idx+8:idx+12])[0]\n    for i in range(entry_count):\n        pos = idx + 12 + i*4\n       \
+    \ old = struct.unpack('>I', data[pos:pos+4])[0]\n        new = old - key if sub else old + key\n \
+    \       if new < 0:\n            continue\n        data[pos:pos+4] = struct.pack('>I', new)\n    return\
+    \ bytes(data)\n"
+seen_in:
+- FIC2026_INITIAL_C_Q9
+common_pitfalls:
+- ❌ 用 little-endian unpack '<I' (mp4 是 big-endian)
+- ❌ 没考虑 64-bit offset (co64 box, 大文件用)
+- ❌ 改完 offset 没重写文件
+related_techniques: []

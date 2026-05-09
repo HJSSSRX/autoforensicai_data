@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_S_Q4
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 4
+question: 该服务器根分区快照路径为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：/abc/def】
+question_type: text
+expected_format: ''
+keywords:
+- 该服务器根分区快照路径为
+official_answer: /root/history
+our_actual_answer: /root/history
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: btrfs subvolume list / + show 看 snapshot 标记
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

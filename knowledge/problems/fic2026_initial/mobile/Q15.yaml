@@ -1,0 +1,30 @@
+qid: FIC2026_INITIAL_M_Q15
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 15
+question: 该APP的assets目录中存在一个加密配置文件config.dat。请解密该文件，写出其中的USDT钱包地址【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】
+question_type: text
+expected_format: ''
+keywords:
+- 该APP的assets目录中存在一个加密配置文件config
+- dat
+- 请解密该文件
+- 写出其中的USDT钱包地址
+official_answer: TXqH7sVn8bR4kL2mN9pW6xJ3cY5dF1gA
+our_actual_answer: TXqH7sVn8bR4kL2mN9pW6xJ3cY5dF1gA
+our_confidence: medium
+result: correct
+verification_status: unverified
+method_summary: config.dat 解密 → JSON sponsors[2].wallet
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

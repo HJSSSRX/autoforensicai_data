@@ -1,0 +1,216 @@
+# Auto-generated. Do not hand-edit.
+_generated_by: tools/build_kb_index.py
+_count: 19
+entries:
+- file: 2026-05-09_remote_collab_failures__A_main.yaml
+  title: 2026-05-09_remote_collab_failures__A_main
+  machine: A_main
+  date: null
+  tags: []
+  category: null
+  role: null
+- file: 20260509_A01_top5_advice__A_main.yaml
+  title: 20260509_A01_top5_advice__A_main
+  machine: A_main
+  date: null
+  tags:
+  - advice
+  - top5
+  - tools
+  - paths
+  - pitfalls
+  category: computer_forensics
+  role: null
+- file: 20260509_C01_os_version__A_main.yaml
+  title: 20260509_C01_os_version__A_main
+  machine: A_main
+  date: null
+  tags:
+  - solved
+  - os_version
+  - deepin
+  - e01_mount
+  category: computer_forensics
+  role: null
+- file: 20260509_C02_phishing_sender__A_main.yaml
+  title: 20260509_C02_phishing_sender__A_main
+  machine: A_main
+  date: null
+  tags:
+  - solved
+  - phishing
+  - email
+  - foxmail
+  - deepin_wine
+  category: computer_forensics
+  role: null
+- file: 20260509_C03_gold_merchant__A_main.yaml
+  title: 20260509_C03_gold_merchant__A_main
+  machine: A_main
+  date: null
+  tags:
+  - solved
+  - gold_merchant
+  - voice_note
+  - sqlite
+  category: computer_forensics
+  role: null
+- file: 20260509_C04_rsa_fermat_wrong__A_main.yaml
+  title: 20260509_C04_rsa_fermat_wrong__A_main
+  machine: A_main
+  date: null
+  tags:
+  - incorrect_answer
+  - rsa_fermat
+  - encryption
+  - ocr
+  - lesson
+  category: computer_forensics
+  role: null
+- file: 20260509_C05_vpn_port__A_main.yaml
+  title: 20260509_C05_vpn_port__A_main
+  machine: A_main
+  date: null
+  tags:
+  - solved
+  - vpn
+  - clash_verge
+  - proxy_port
+  category: computer_forensics
+  role: null
+- file: 20260509_C06_ai_model_type_wrong__A_main.yaml
+  title: 20260509_C06_ai_model_type_wrong__A_main
+  machine: A_main
+  date: null
+  tags:
+  - incorrect_answer
+  - semantic_misunderstanding
+  - ai_model
+  - uos_ai
+  category: computer_forensics
+  role: null
+- file: 20260509_C07_api_key_wrong__A_main.yaml
+  title: 20260509_C07_api_key_wrong__A_main
+  machine: A_main
+  date: null
+  tags:
+  - incorrect_answer
+  - not_found
+  - api_key
+  - uos_ai
+  - sqlite
+  category: computer_forensics
+  role: null
+- file: 20260509_C08_ransomware_vc_dependency__A_main.yaml
+  title: 20260509_C08_ransomware_vc_dependency__A_main
+  machine: A_main
+  date: null
+  tags:
+  - incorrect_answer
+  - veracrypt
+  - ransomware
+  - cross_evidence
+  - dependency
+  category: computer_forensics
+  role: null
+- file: 20260509_C09_safe_box_number__A_main.yaml
+  title: 20260509_C09_safe_box_number__A_main
+  machine: A_main
+  date: null
+  tags:
+  - incorrect_answer
+  - veracrypt
+  - safe_box
+  - concept_confusion
+  category: computer_forensics
+  role: null
+- file: 20260509_C10_safe_box_password__A_main.yaml
+  title: 20260509_C10_safe_box_password__A_main
+  machine: A_main
+  date: null
+  tags:
+  - incorrect_answer
+  - veracrypt
+  - safe_box
+  - concept_confusion
+  category: computer_forensics
+  role: null
+- file: 20260509_L01_root_cause_analysis__A_main.yaml
+  title: 20260509_L01_root_cause_analysis__A_main
+  machine: A_main
+  date: null
+  tags:
+  - lesson
+  - root_cause
+  - global_reflection
+  category: computer_forensics
+  role: null
+- file: 20260509_S01_ewf_mount_wsl__A_main.yaml
+  title: 20260509_S01_ewf_mount_wsl__A_main
+  machine: A_main
+  date: null
+  tags:
+  - skill
+  - ewf_mount
+  - wsl
+  - e01
+  - disk_forensics
+  category: computer_forensics
+  role: null
+- file: 20260509_S02_rsa_fermat_attack__A_main.yaml
+  title: 20260509_S02_rsa_fermat_attack__A_main
+  machine: A_main
+  date: null
+  tags:
+  - skill
+  - rsa
+  - fermat
+  - factorization
+  - crypto
+  category: computer_forensics
+  role: null
+- file: 20260509_S03_deepin_forensic_paths__A_main.yaml
+  title: 20260509_S03_deepin_forensic_paths__A_main
+  machine: A_main
+  date: null
+  tags:
+  - skill
+  - deepin
+  - forensic_paths
+  - disk_layout
+  category: computer_forensics
+  role: null
+- file: 20260509_T01_wsl_quoting_trap__A_main.yaml
+  title: 20260509_T01_wsl_quoting_trap__A_main
+  machine: A_main
+  date: null
+  tags:
+  - tool_trap
+  - wsl
+  - powershell
+  - quoting
+  - chinese_path
+  category: computer_forensics
+  role: null
+- file: 20260509_T02_ext4_noload_trap__A_main.yaml
+  title: 20260509_T02_ext4_noload_trap__A_main
+  machine: A_main
+  date: null
+  tags:
+  - tool_trap
+  - ext4
+  - noload
+  - wsl_kernel
+  - mount
+  category: computer_forensics
+  role: null
+- file: 20260509_X01_cross_evidence__A_main.yaml
+  title: 20260509_X01_cross_evidence__A_main
+  machine: A_main
+  date: null
+  tags:
+  - cross_evidence
+  - collaboration
+  - information_exchange
+  category: computer_forensics
+  role: null

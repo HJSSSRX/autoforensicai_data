@@ -1,0 +1,27 @@
+slug: excel_xor_decrypt
+name: Excel 自定义 XOR-加 编码反算
+category: 应用层加密
+when_to_use:
+- Excel 文件能打开但单元格内容是数字/乱码, 不是题目应有内容
+- 用户搜索历史有『如何加密 excel』
+- tool 目录有加密脚本
+detect_signal:
+- encoded 值范围奇怪 (e.g. 100000+ 而内容应是 6 位密码)
+- 找到加密脚本, 看到形如 (a^k)*N + (b^k)
+algorithm: "通用结构: encoded = (((x + offset_x) ^ key_x) * multiplier) + ((y + offset_y) ^ key_y)\n反算: x\
+  \ = ((encoded // multiplier) ^ key_x) - offset_x\n      y = ((encoded % multiplier) ^ key_y) - offset_y"
+script:
+  lang: python
+  code: "from openpyxl import load_workbook\n\nOFFSET = 100\nKEY = 85\nMULT = 1000\n\ndef decode(encoded:\
+    \ int) -> tuple[int, int]:\n    x = ((encoded // MULT) ^ KEY) - OFFSET\n    y = ((encoded % MULT)\
+    \ ^ KEY) - OFFSET\n    return x, y\n\nwb = load_workbook('encrypted.xlsx')\nfor ws in wb.worksheets:\n\
+    \    for row in ws.iter_rows():\n        for cell in row:\n            if isinstance(cell.value, int):\n\
+    \                print(cell.coordinate, decode(cell.value))\n"
+seen_in:
+- FIC2026_INITIAL_C_Q10
+common_pitfalls:
+- ❌ 试图用 john/excel-加密暴破 (不是标准加密)
+- ❌ 没找到加密脚本就放弃
+- ❌ 没注意到 OFFSET/KEY/MULT 是题目可变常量, 必须从加密脚本读
+related_techniques:
+- browser_history_mining

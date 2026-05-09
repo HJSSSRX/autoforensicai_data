@@ -1,0 +1,28 @@
+qid: FIC2026_INITIAL_C_Q2
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 2
+question: 分析计算机检材，李安弘曾收到一份免费领取token的邮件的疑似钓鱼邮件，其发送用户邮箱为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】
+question_type: email
+expected_format: ''
+keywords:
+- 李安弘曾收到一份免费领取token的邮件的疑似钓鱼邮件
+- 其发送用户邮箱为
+official_answer: hf13338261292@outlook.com
+our_actual_answer: hf13338261292@outlook.com
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: 搜邮件中关键词 'token'
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

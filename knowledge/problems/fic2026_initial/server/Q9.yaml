@@ -1,0 +1,46 @@
+qid: FIC2026_INITIAL_S_Q9
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 9
+question: 该站点设置页面中，被使用的前端模板来自于哪个源文件？ 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：abc.def】
+question_type: text
+expected_format: ''
+keywords:
+- maccms
+- 前端模板
+- info.ini
+- 001tep
+- 源文件
+official_answer: info.ini
+our_actual_answer: YMYS002-8x8x.zip
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: maccms.php 模板目录配置 001tep → info.ini (问应用文件不是源 zip)
+solution_steps:
+- 1. cat /var/www/html/maccms10/application/extra/maccms.php
+- 2. 看到 template => '001tep' 类配置
+- 3. ls /var/www/html/maccms10/template/001tep/
+- 4. 看到 info.ini = 模板配置文件 (含模板名/作者/版本)
+- 5. 答 info.ini (问『被使用的源文件』, 是当前应用的配置)
+- 6. 不要答 zip 包名 (e.g. YMYS002-8x8x.zip) — 那是上传时的源, 不是『被使用的』
+tools:
+- bash (cat/ls)
+script_snippets: []
+common_mistakes:
+- ❌ 答 zip 包名 (上传打包源)
+- ❌ 答 .html 模板文件 (具体页面不是配置)
+- ❌ 没注意到题目里『被使用的』这 3 字 (强调当前生效的, 不是历史)
+lessons:
+- '🎯 maccms 模板结构: template/<name>/info.ini (元信息) + html/*.html (具体模板)'
+- 🎯 题目『模板源文件』≠ 模板源代码包 (.zip), 而是模板的配置文件 info.ini
+- 🎯 中文题『被使用的 X』强调当前激活, 排除已上传未启用的
+related_techniques:
+- maccms_internals
+related_problems:
+- FIC2026_INITIAL_S_Q7
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

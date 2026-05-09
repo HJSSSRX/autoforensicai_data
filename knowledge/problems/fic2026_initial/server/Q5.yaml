@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_S_Q5
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 5
+question: 该网站后台管理入口对应的文件名为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：123.txt】
+question_type: text
+expected_format: ''
+keywords:
+- 该网站后台管理入口对应的文件名为
+official_answer: user.php
+our_actual_answer: user.php
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: nginx 配置 + maccms10 ENTRANCE='admin' 判定改名后入口
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

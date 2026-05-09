@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_S_Q12
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 12
+question: 该网站数据库使用了哪一类容器技术 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：abc】
+question_type: text
+expected_format: ''
+keywords:
+- 该网站数据库使用了哪一类容器技术
+official_answer: lxc
+our_actual_answer: lxc
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: /var/lib/lxc/mytidb/config 确认 (不是 docker)
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

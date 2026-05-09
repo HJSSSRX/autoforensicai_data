@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_S_Q14
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 14
+question: 新注册用户数量最多的日期为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：2000/1/1】
+question_type: date
+expected_format: ''
+keywords:
+- 新注册用户数量最多的日期为
+official_answer: 2026/4/15
+our_actual_answer: 2026/4/15
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: SQL DATE_FORMAT(FROM_UNIXTIME(user_reg_time), '%Y/%c/%e')
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

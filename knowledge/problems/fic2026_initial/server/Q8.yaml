@@ -1,0 +1,53 @@
+qid: FIC2026_INITIAL_S_Q8
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 8
+question: 该网站分类3中，视频的拼音为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：abc】
+question_type: text
+expected_format: ''
+keywords:
+- maccms
+- mac_type
+- type_en
+- 拼音
+- 视频分类
+official_answer: sipaanshe
+our_actual_answer: guochan
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: mysql 连数据库 → mac_type 表 type_id=3 → type_en 字段
+solution_steps:
+- 1. 网页前台看不到拼音 → 进数据库
+- 2. cat /var/www/html/maccms10/application/database.php 拿连接信息
+- 3. mysql -h <host> -u <user> -p<pwd> <db>
+- 4. SELECT * FROM mac_type WHERE type_id = 3;
+- 5. 字段 type_en (英文/拼音 slug) = sipaanshe
+- 6. 题目要『视频的拼音』 = type_en 字段值
+tools:
+- mysql client
+script_snippets:
+- lang: sql
+  purpose: 查 maccms 分类拼音
+  code: 'SELECT type_id, type_name, type_en
+
+    FROM mac_type
+
+    WHERE type_id = 3;'
+common_mistakes:
+- ❌ 答 type_name 的拼音转换 (e.g. guochan/sipai)
+- ❌ 没意识到 maccms 有专门的 type_en 字段
+lessons:
+- '🎯 maccms 表设计: type_name=中文, type_en=英文/拼音 slug, type_pinyin 不存在'
+- 🎯 看到『拼音』『英文』『slug』 → 优先查 type_en 字段
+- 🎯 题目说『分类3』 = type_id = 3, 不是数组索引
+related_techniques:
+- maccms_internals
+related_problems:
+- FIC2026_INITIAL_S_Q7
+- FIC2026_INITIAL_S_Q14
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

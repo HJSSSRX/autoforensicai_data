@@ -1,0 +1,62 @@
+qid: FIC2026_INITIAL_S_Q16
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 16
+question: 以下哪个文件系统未被使用
+question_type: multi_choice
+expected_format: ''
+keywords:
+- 文件系统
+- 未使用
+- lsblk
+- ntfs
+- xfs
+- btrfs
+- lvm
+- 多选
+official_answer: A,C
+our_actual_answer: A
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: lsblk -f 看完整文件系统 (ntfs+xfs 都没用)
+solution_steps:
+- 1. lsblk -f (看完整文件系统类型列, 不是只看挂载点)
+- 2. 对照选项 A.ntfs B.btrfs C.xfs D.lvm
+- 3. btrfs (根分区) ✓ 用了
+- 4. lvm (data/root vg) ✓ 用了
+- 5. ntfs ✗ 没出现
+- 6. xfs ✗ 没出现
+- 7. 答 A,C (注意是多选)
+tools:
+- lsblk -f
+- blkid
+- df -T
+script_snippets:
+- lang: bash
+  purpose: 穷举文件系统
+  code: 'lsblk -f
+
+    echo ''---''
+
+    blkid
+
+    echo ''---''
+
+    df -T | tail -n +2 | awk ''{print $2}'' | sort -u'
+common_mistakes:
+- ❌ 单选答 A 漏 C (题目是多选, 必须穷举)
+- ❌ 只看 mount/df, 漏了未挂载的设备
+lessons:
+- '🎯 多选题第一原则: 穷举所有候选, 用 3 种工具交叉验证 (lsblk-f / blkid / df-T)'
+- 🎯 lsblk -f 显示所有块设备的 FSTYPE 列, 包括 lvm 子卷
+- 🎯 LVM 不是文件系统但题目把它列入, 说明题目把『存储栈层』都算文件系统
+related_techniques:
+- multichoice_enumeration
+related_problems:
+- FIC2026_INITIAL_S_Q17
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

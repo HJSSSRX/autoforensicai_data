@@ -1,0 +1,70 @@
+qid: FIC2026_INITIAL_C_Q8
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 8
+question: 分析计算机检材，李安弘电脑中勒索软件提供的解密服务联系方式为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】【参考格式：abcd123232】
+question_type: email
+expected_format: ''
+keywords:
+- 勒索软件
+- VeraCrypt
+- VC加密
+- get_token_linux
+- Go逆向
+- tutanota
+official_answer: beijixin996@tutanota.com
+our_actual_answer: （待 binary 攻破 vc 容器后查 VHD 内 readme/勒索信）
+our_confidence: low
+result: incorrect
+verification_status: unverified
+method_summary: VC 解密(密码=mobile笔记 9ed2@99y8.com.cn) → IDA 反汇编 get_token_linux → main.main 中小端序 hex 转 UTF-8
+solution_steps:
+- 1. 火眼证据分析 → 跳出『需要 VeraCrypt 解密』提示, 注意分区编号 (这里是分区 3)
+- '2. 跨检材取密码: mobile 检材笔记里找 → 笔记本/隐写识别工具显示 `9ed2@99y8.com.cn`'
+- 3. 把 PC 分区 3 扔 VeraCrypt → 输入密码 → 解密成功
+- 4. 解密后看到 5 个文件, 重点是 get_token_linux (Go 程序)
+- 5. IDA 9.x 打开 (低版本不支持 Go) → 跳到 main_main 函数
+- 6. 看到字符串常量 `*(_QWORD *)v4 = 0xAFE886AFE5A3A7E8LL; v5 = 0xBBB3E7BBB3E720B7LL;`
+- 7. 小端序 hex 拼接 + UTF-8 解码 → 得到 `解密请系系` (中文勒索信)
+- 8. 后续 qmemcpy 拷贝 `beijixin996@tutanota.com` 字面量 → 这就是邮箱答案
+tools:
+- VeraCrypt
+- IDA Pro 9.2+
+- Python (small-endian decoder)
+script_snippets:
+- lang: python
+  purpose: 小端序 hex 转 UTF-8
+  code: 'import struct
+
+    # IDA 中 *(_QWORD *)v4 = 0xAFE886AFE5A3A7E8LL
+
+    # 小端: 8 字节按小端转 bytes
+
+    hex_vals = [0xAFE886AFE5A3A7E8, 0xBBB3E7BBB3E720B7]
+
+    data = b''''.join(struct.pack(''<Q'', v) for v in hex_vals)
+
+    print(data.decode(''utf-8''))'
+common_mistakes:
+- ❌ 没去 mobile 检材取 VC 密码 (以为密码本地, 实际跨检材联动)
+- ❌ 把 mobile 笔记的 SHA1 当作密码 (那是 binary 题用的, 是不同的密码)
+- ❌ Go 程序用 IDA 7.x 打开看不到清晰的 main 函数
+- ❌ 看到 hex 常量没意识到是字符串 (Go 字符串字面量编译时拆成 64-bit chunks)
+lessons:
+- 🎯 火眼提示『需要 VeraCrypt 解密』= 第一优先级, 立即跨检材找密码
+- '🎯 mobile 笔记里有 2 个不同的密码: 9ed2@99y8.com.cn (VC) + 16字符 ASCII (binary)'
+- 🎯 Go 程序逆向必备 IDA 9.x + 知道 main_main 是真入口
+- 🎯 看到 0xAFE886AFE5A3A7E8 类常量 → 立即想小端 hex → UTF-8
+- 🎯 这种『藏邮箱』题目, 邮箱通常用 qmemcpy 字面量直接放, 而提示文字用 hex 常量隐藏
+related_techniques:
+- veracrypt_manual_mount
+- go_program_reversing
+- le_hex_to_utf8
+related_problems:
+- FIC2026_INITIAL_C_Q9
+- FIC2026_INITIAL_C_Q10
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

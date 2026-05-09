@@ -1,0 +1,58 @@
+qid: FIC2026_INITIAL_C_Q10
+competition: FIC
+year: 2026
+stage: initial
+category: computer
+question_no: 10
+question: 分析计算机检材，李安弘电脑中记录的保险柜密码是 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：123456】
+question_type: number
+expected_format: ''
+keywords:
+- 保险柜密码
+- Excel加密
+- XOR
+- 如何加密excel
+- tool目录
+official_answer: '583985'
+our_actual_answer: （暴破阻塞中, 16字符 ASCII, SHA1=3e627d9046481366eef9c89183f87004968363d9）
+our_confidence: low
+result: incorrect
+verification_status: unverified
+method_summary: 搜'保险箱' → /root/文档/zhongyao 加密 Excel → tool 目录加密脚本 (((x+100)^85)*1000+((y+100)^85)) → 反算
+  x,y
+solution_steps:
+- 1. 火眼/Everything 搜『保险箱』『保险柜』, 找到 /root/文档/zhongyao/ 加密 Excel
+- 2. 直接打开失败 → Excel 是被自定义脚本加密的
+- 3. 看用户的 Chrome/Firefox 历史, 反复搜过『如何加密 excel』
+- 4. 在 ~/tool/ 或桌面 tool 目录找加密脚本
+- '5. 加密逻辑: `encoded = (((x + 100) ^ 85) * 1000) + ((y + 100) ^ 85)`'
+- '6. 反算: `x = ((encoded // 1000) ^ 85) - 100; y = ((encoded % 1000) ^ 85) - 100`'
+- 7. 跑脚本解密 Excel 全部单元格 → 得到密码 `583985`
+tools:
+- Python
+- openpyxl
+script_snippets:
+- lang: python
+  purpose: Excel XOR-加 解密
+  code: "def decrypt(encoded: int) -> tuple[int, int]:\n    x = ((encoded // 1000) ^ 85) - 100\n    y\
+    \ = ((encoded % 1000) ^ 85) - 100\n    return x, y\n\nfrom openpyxl import load_workbook\nwb = load_workbook('encrypted.xlsx')\n\
+    ws = wb.active\nfor row in ws.iter_rows():\n    for cell in row:\n        if isinstance(cell.value,\
+    \ int):\n            x, y = decrypt(cell.value)\n            print(cell.coordinate, x, y)"
+common_mistakes:
+- ❌ 试图用 john/excel-密码暴破 (不是 Excel 标准加密, 是自定义脚本)
+- ❌ 没去看用户搜索历史, 错过『如何加密 excel』关键线索
+- ❌ 没去 tool 目录找加密脚本
+lessons:
+- '🎯 用户的浏览器搜索历史是金矿: 搜过的关键词 = 他们做过的事'
+- 🎯 自定义加密脚本通常和加密文件在同/邻目录, 反算很简单
+- 🎯 看到 `(x ^ K) * N + (y ^ K)` 这种结构 = 把两个值 pack 进一个数 + XOR 混淆
+- 🎯 Excel 被加密时先确认是『标准加密』还是『单元格内容编码』(后者用脚本反算)
+related_techniques:
+- excel_xor_decrypt
+- browser_history_mining
+related_problems:
+- FIC2026_INITIAL_C_Q8
+- FIC2026_INITIAL_C_Q9
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

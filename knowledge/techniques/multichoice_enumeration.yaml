@@ -1,0 +1,50 @@
+slug: multichoice_enumeration
+name: 多选题穷举验证
+category: 答题策略
+when_to_use:
+- 选择题 (尤其多选), 题目给 A/B/C/D/E 选项
+detect_signal:
+- 题目末尾有 A.xxx B.xxx C.xxx 选项列表
+algorithm: '对每个选项独立验证, 用至少 2 个工具/数据源交叉确认
+
+  选项中可能有: 真实存在的(选), 不存在的虚构项(不选), 装了但没运行的(看题意)'
+script:
+  lang: bash
+  code: '# 文件系统多选
+
+    lsblk -f      # 显示所有块设备的 FSTYPE
+
+    blkid         # 显示已知文件系统标签
+
+    df -T         # 已挂载分区 + 类型
+
+    cat /proc/filesystems  # 内核支持列表
+
+
+    # 数据库服务多选
+
+    dpkg -l | grep -iE ''mysql|tidb|postgres|mariadb|sqlite|redis|mongo''
+
+    systemctl list-units --type=service | grep -iE ''mysql|postgres|tidb''
+
+    ss -tlnp | grep -E '':(3306|3307|4000|5432|6379|27017)''
+
+
+    # 容器技术多选
+
+    which docker lxc-ls podman containerd nerdctl
+
+    ls /var/lib/{docker,lxc,containerd}/ 2>/dev/null
+
+    '
+seen_in:
+- FIC2026_INITIAL_S_Q16
+- FIC2026_INITIAL_S_Q17
+- FIC2026_INITIAL_M_Q11
+common_pitfalls:
+- ❌ 单选答 1 个漏其他 (题目明确多选时永远穷举)
+- ❌ 看到 GuessDB / FakeOS 这类虚构项不知排除
+- ❌ 只装 client 不算『安装服务』(必须 server 包)
+- '❌ 平台格式: A,B,D vs ABD vs A、B、D, 看历史 platform_confirmed'
+related_techniques:
+- platform_format_dictionary

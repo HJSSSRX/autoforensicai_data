@@ -1,0 +1,43 @@
+qid: FIC2026_INITIAL_I_Q1
+competition: FIC
+year: 2026
+stage: initial
+category: internet
+question_no: 1
+question: 售卖卡密的公开群组ID为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：@abc123】
+question_type: text
+expected_format: ''
+keywords:
+- 卡密
+- 群组ID
+- TG
+- Telegram
+- '@前缀'
+official_answer: '@FIC_2026'
+our_actual_answer: FIC_2026
+our_confidence: high
+result: incorrect
+verification_status: unverified
+method_summary: 服务器 maccms 配置中的 TG 链接 (注意带 @)
+solution_steps:
+- '1. 来源: server maccms.php 主配置文件中, 看到 t.me/FIC_2026 链接'
+- '2. Telegram 群组 ID 平台规则: 必须带 @ 前缀'
+- 3. 答 @FIC_2026 (不是 FIC_2026, 不是 t.me/FIC_2026)
+tools:
+- grep
+- 对官方 platform_confirmed 答案抓格式
+script_snippets: []
+common_mistakes:
+- ❌ 答 FIC_2026 缺 @ 前缀
+- ❌ 答完整 URL t.me/FIC_2026 (太长不符合 ID 格式)
+- ❌ 答 https://t.me/FIC_2026 (是链接不是 ID)
+lessons:
+- '🎯 Telegram/QQ/微信 群组 ID 平台规则: TG 带 @, QQ 不带, 微信用 wxid_'
+- 🎯 看到题目『群组 ID』 → 第一反应去『关注』平台格式潜规则
+- '🎯 早期收集 platform_confirmed 答案样本, 建格式字典: ID/日期/URL/多选/路径'
+related_techniques:
+- platform_format_dictionary
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

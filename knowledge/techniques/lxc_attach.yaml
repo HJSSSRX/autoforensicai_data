@@ -1,0 +1,49 @@
+slug: lxc_attach
+name: LXC 容器内部访问
+category: Linux 容器
+when_to_use:
+- 看到 ip a 有 lxcbr0 网桥
+- /var/lib/lxc/<name>/config 存在
+- 容器内有目标服务 (如 TiDB/MySQL/特定应用)
+detect_signal:
+- ps -aux 看到 lxc-start 或 lxc-monitor 进程
+- /proc/1/cgroup 显示 0::/lxc/...
+- lxc-ls -f 列出容器
+algorithm: lxc 容器与宿主网络隔离, 必须 lxc-attach 进入或宿主路由到容器 IP
+script:
+  lang: bash
+  code: '# 列容器
+
+    lxc-ls -f
+
+
+    # 进入容器交互 shell
+
+    lxc-attach -n mytidb
+
+
+    # 一行执行命令
+
+    lxc-attach -n mytidb -- bash -c ''ss -tlnp | grep 4000''
+
+
+    # 复制文件 host ↔ container
+
+    cp /tmp/x.txt /var/lib/lxc/mytidb/rootfs/tmp/
+
+
+    # 看容器内 mysql/tidb
+
+    lxc-attach -n mytidb -- mysql -h 127.0.0.1 -P 4000 -u root -e ''SHOW DATABASES''
+
+    '
+seen_in:
+- FIC2026_INITIAL_S_Q12
+- FIC2026_INITIAL_S_Q13
+- FIC2026_INITIAL_I_Q2
+common_pitfalls:
+- ❌ 容器外直接 ping 容器 IP / mytidb hostname (网络隔离)
+- ❌ 把 docker 命令套到 lxc (不是 docker exec, 是 lxc-attach)
+- ❌ 容器没启动 lxc-attach 失败, 要 lxc-start -n <name> -d
+related_techniques:
+- maccms_internals

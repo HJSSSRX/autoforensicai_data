@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_M_Q1
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 1
+question: 分析手机检材，该手机型号为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：HUAWEIP90】
+question_type: text
+expected_format: ''
+keywords:
+- 该手机型号为
+official_answer: RedmiNote7Pro
+our_actual_answer: RedmiNote7Pro
+our_confidence: high
+result: correct
+verification_status: verified
+method_summary: 火眼直读手机型号
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

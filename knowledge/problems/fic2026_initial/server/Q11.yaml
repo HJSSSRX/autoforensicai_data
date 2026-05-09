@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_S_Q11
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 11
+question: 该网站关联的数据库的ip地址为 【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：1.1.1.1】
+question_type: ip
+expected_format: ''
+keywords:
+- 该网站关联的数据库的ip地址为
+official_answer: 10.0.3.100
+our_actual_answer: 10.0.3.100
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: database.php host=mytidb + /etc/hosts 查 IP
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

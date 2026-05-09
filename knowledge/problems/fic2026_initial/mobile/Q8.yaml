@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_M_Q8
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 8
+question: 分析手机检材，手机中使用的AI软件李安弘主动向AI提问了几次【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：1】
+question_type: number
+expected_format: ''
+keywords:
+- 手机中使用的AI软件李安弘主动向AI提问了几次
+official_answer: '5'
+our_actual_answer: '5'
+our_confidence: medium
+result: correct
+verification_status: unverified
+method_summary: PocketPal AI db → message 表 role='user' 计数
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

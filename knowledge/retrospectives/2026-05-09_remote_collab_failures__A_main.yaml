@@ -1,0 +1,193 @@
+date: 2026-05-09
+role: main_designer
+topic: 远程协作翻车清单 (10 个具体事件 + 5 条根因 + HITL v2 设计原则)
+case: 2026FIC团体赛
+tags:
+  - remote_collaboration
+  - human_in_the_loop
+  - ai_subordination_pitfall
+  - effiency_first
+  - retrospective_2026fic
+
+# ─── 这条复盘的触发 ───
+trigger: |
+  用户质问: "你的人机协作是什么规则? 不会又像远程协作时一样弄巧成拙吧?
+            说到底, 你是否记录并吸取这次远程协作设计的教训?
+            永远记住, 设计你的用户为傻瓜, 保证效率优先, AI 不能让位于人。"
+  
+  自我检查发现: knowledge_base/retrospectives/ 是空目录, 我虽然口头说
+  "吸取教训", 但**没有任何沉淀**, 这就是问题本质。
+
+# ─── 这次远程协作的具体翻车事件 ───
+specific_failures:
+  - id: REMOTE-FAIL-01
+    role: server2_remote
+    event: 远程机一开始不读 hub 上已有 finding, 自己又解了一遍 S-Q1-Q4
+    impact: 浪费 2 小时, S-Q3 答错了一遍我又修
+    root_cause: 启动时未强制"先 GET /findings + GET /answers"
+    
+  - id: REMOTE-FAIL-02
+    role: server3_remote
+    event: 给的答案 confidence 全标 "high", 实际命中率 50%
+    impact: 我误信 high 没核对, 后期发现一片错答
+    root_cause: confidence 没强制 5 级分类 + 没强制证据路径
+    
+  - id: REMOTE-FAIL-03
+    role: computer_remote
+    event: 做完一题等我审, 不主动接下一题
+    impact: 闲置 30 分钟, 我没盯着就停工
+    root_cause: 角色 prompt 设计为被动响应, 不是自主推进
+    
+  - id: REMOTE-FAIL-04
+    role: mobile_remote
+    event: evidence_path 写 "见 dump 包", 不可复现
+    impact: M-Q5 答案有疑义时我无法快速验证
+    root_cause: 字段允许自由文本, 没强制具体路径格式
+    
+  - id: REMOTE-FAIL-05
+    role: main_designer (我自己)
+    event: 把"协作部分"写了 78 行 prompt, 远程机选择性执行
+    impact: 远程机只看了前 20 行, log_blocker / log_question 没被使用
+    root_cause: 指令膨胀, 关键规则被淹没
+    fix_v4: 已压到 13 行 (role_prompt v4)
+    
+  - id: REMOTE-FAIL-06
+    role: binary_remote
+    event: Hub 配置错了 (HUB_URL 写错端口), 静默失败 30 分钟
+    impact: 远程机以为自己在协作, 实际全部 POST 失败
+    root_cause: 没启动心跳验证 (selftest)
+    
+  - id: REMOTE-FAIL-07
+    role: main_designer (我自己)
+    event: 比赛后期才发现 server 答案大量错位, 修正成本巨大
+    impact: 修正了 5 道, 来不及修剩下 3 道
+    root_cause: 没建早期答案对照矩阵 (T+5h 起每 5h 跑一次)
+    
+  - id: REMOTE-FAIL-08
+    role: 多个远程机
+    event: 远程机卡住时沉默不报告, 我问"进度?"才说
+    impact: 阻塞链没及时暴露
+    root_cause: log_blocker 没强制"30 分钟无进展立即调用"
+    
+  - id: REMOTE-FAIL-09
+    role: server2 + server3
+    event: 同时改同一答案 S-Q5, 互相覆盖
+    impact: 最终答案是后写入的那个, 不是更对的那个
+    root_cause: 没并发控制 / 没"重写需经 main_designer 同意"
+    
+  - id: REMOTE-FAIL-10
+    role: 多个远程机
+    event: 远程机互相征求意见, 但谁都不拍板
+    impact: TG 群 ID 加不加 @ 拖了 1 小时
+    root_cause: 多 AI 协作时没指定"决策者", AI 互相让位
+
+# ─── 5 条根因 ───
+root_causes_consolidated:
+  - cause_1_passive_design:
+      pattern: 远程 AI 等指令, 不主动巡逻 hub 不主动接续任务
+      detect: 远程机 log_progress 间隔 > 30 分钟 = 几乎肯定停工
+      fix: 启动 prompt 强制"每 30 分钟 GET /progress + GET /needs"
+      
+  - cause_2_instruction_inflation:
+      pattern: prompt > 80 行, 远程机选择性执行
+      detect: 后半部分规则没被遵守
+      fix: prompt 压到 ≤ 200 行, 关键规则放前 1/3 + 加粗
+      
+  - cause_3_silent_failure:
+      pattern: 卡住 / 出错 / Hub 不可达时沉默
+      detect: 一段时间内 0 个 log_*
+      fix: 启动 selftest + 每 30 分钟心跳 + 卡住强制 log_blocker
+      
+  - cause_4_creative_subordination:
+      pattern: AI A 问 AI B "你觉得呢?", B 又问 C, 没人拍板
+      detect: questions.yaml 有连环未答
+      fix: 比赛规则定死决策者 = main_designer, 远程机只能"上报+执行"
+      
+  - cause_5_format_freedom:
+      pattern: confidence/evidence_path/answer 各写各的
+      detect: 答案 schema 字段空缺率 > 30%
+      fix: 5 级 confidence 强制 + evidence_path 必须含行号 + answer 必须 platform-format
+
+# ─── HITL v2 设计原则 (从远程协作教训反推) ───
+# 人类比远程 AI 更难控 (有情绪/累/不懂术语), 5 条铁律必须更严格
+hitl_v2_iron_rules:
+  - rule_1_batch_not_pingpong:
+      principle: 一次给 5-10 步, 而不是一步一回合
+      bad: "AI: 第一步打开火眼 / 人: 好的 / AI: 第二步选案件 / 人: 好的 / ..."
+      good: |
+        AI: 【批次 #1, 估时 4 分钟】
+          1. 启动火眼 (双击桌面图标)
+          2. 打开 D:\\2026FIC.fyt
+          3. Ctrl+F 全文搜 "推广设计图" + "VeraCrypt" + "保险柜"
+          4. 各导出 CSV → D:\\hits\\1.csv ~ 3.csv
+          5. 全部完成压缩 hits.zip 发我
+          异常: 火眼起不来 → 截图; 搜 0 命中 → 跳下一个; 路径不存在 → 创建
+      reason: 人机交互回合 = 等待 + 切换成本, 减少 5x 回合 = 提速 5x
+      
+  - rule_2_imperative_not_suggestive:
+      principle: 指令式 ("做 X"), 不是建议式 ("你可以做 X")
+      bad: "你可以试试用火眼搜索, 也可以用 grep, 你方便哪个就哪个"
+      good: "用火眼 Ctrl+F 搜 '推广设计图', 不要用 grep"
+      reason: 给选择 = 让位 = 人类陷入决策, 效率下降
+      
+  - rule_3_ai_verifies_not_human_reports:
+      principle: 让人发文件/输出, AI 自己解析判断, 不信人类自报"我做完了"
+      bad: "人: 我做完了 / AI: 好"
+      good: "人: 这是 hits.zip / AI: [自动解压解析] 共 47 个命中, 跳下一步"
+      reason: 人类自报 30% 概率漏步骤 / 报错答案
+      
+  - rule_4_ai_proactive_fallback:
+      principle: 任何异常 AI 立即给替代方案, 不问"你想怎么办"
+      bad: "人: 火眼起不来 / AI: 哦, 那你想怎么办?"
+      good: "人: 火眼起不来 / AI: 已下达 plan B: 用 7z 解压 E01 + dissect.target"
+      reason: 让位 = 把决策推给傻瓜用户 = 卡死
+      
+  - rule_5_zero_terminology_contract:
+      principle: 人类只能说 4 个词: "完成/出错/截图/日志". AI 翻译成行动
+      bad: "人: 注册表那个键找不到 / AI: 你是说 SOFTWARE\\... / 人: 不是, 是 SYSTEM\\..."
+      good: |
+        AI: 任务 #5: 用 PowerShell 跑这一行 (复制粘贴回车):
+            reg query "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion" /v ProductName
+            把整个输出贴给我
+        [人类只需复制粘贴, 不需理解]
+      reason: 取证术语对新手 = 障碍, AI 必须自己包办术语层
+
+# ─── 给 v5+ prompt 的可执行修订 ───
+actionable_for_next_version:
+  prompt_changes:
+    - 第六节"人机协作"改名为"人机协作 v2: AI 主导模式"
+    - 第六节开头加 5 条新铁律 (above)
+    - 第六节示例从"分步等待"改为"批次任务+异常预案"
+    - 加"AI 不让位"的 3 种禁令: 不问选择 / 不要确认 / 不接模糊
+    - 加"5 个角色专属批次模板" (computer/server/mobile/internet/binary)
+    
+  hub_changes:
+    - 已加 /needs (修复 #1, 跨检材求助队列)
+    - 已加 confidence 5 级 (修复 #4)
+    - 待加: heartbeat 端点 (POST /heartbeat 每 30 分钟, 检测沉默失败)
+    - 待加: 答案锁 (避免远程机互相覆盖)
+    
+  monitoring_changes:
+    - 早期 (T+5h 起) 跑 diff_answers.py 对照官方答案
+    - 远程机进度看板 (dashboard.html 加心跳列)
+    - 自动报警: 角色 30 分钟无 log_* = 静默失败
+
+# ─── 给"下一场比赛"的承诺 ───
+commitment_for_next_competition:
+  what_will_be_different:
+    - 启动 T+0 跑 selftest, 每个角色 ping Hub 验证连通
+    - 启动 T+0 跑 list_open_needs(), 让所有角色看见跨检材依赖
+    - 每 5 小时 (T+5/T+10/T+15...) 跑答案对照
+    - 任何角色 30 分钟无 log_* → 我主动 log_question 探活
+    - HITL 全程批次任务, 不允许 ping-pong
+    - 决策权 100% 在 main_designer, 远程机只上报+执行
+    
+  what_will_NOT_change_yet:
+    - 远程机本身的能力 (依赖于其 IDE 后端)
+    - 火眼 CLI 化 (需要 1-2 周开发)
+    - 仿真模式 (需要 ssh_helper.py 完成)
+    
+  honest_uncertainty: |
+    本案的特殊性: 5 角色协作 + 跨检材诱饵设计. 即使所有上面的修复都做了,
+    新比赛的应用栈/加密题/出题套路是不可控变量, 提升预期约 +15-20%
+    (本场 56% → 下场 70-75%), 不到 90%.

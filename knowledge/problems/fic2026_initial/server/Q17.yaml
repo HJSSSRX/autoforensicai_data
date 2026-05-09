@@ -1,0 +1,58 @@
+qid: FIC2026_INITIAL_S_Q17
+competition: FIC
+year: 2026
+stage: initial
+category: server
+question_no: 17
+question: 该服务器安装了以下那些数据库服务
+question_type: multi_choice
+expected_format: ''
+keywords:
+- 数据库服务
+- mysql
+- tidb
+- postgresql
+- mariadb
+- 多选
+official_answer: A,C,D
+our_actual_answer: C,D
+our_confidence: medium
+result: incorrect
+verification_status: unverified
+method_summary: dpkg -l + systemctl 看 mariadb-server 仅客户端 → mysql+tidb+postgresql
+solution_steps:
+- 1. 选项 A.mysql B.GuessDB C.tidb D.postgresql E.mariadb
+- 2. dpkg -l | grep -iE 'mysql|tidb|postgres|mariadb|guess'
+- 3. 看 mariadb 只有 client 没有 server
+- 4. systemctl status mysql / postgresql / tidb
+- 5. ss -tlnp 看监听端口确认运行状态
+- 6. mysql ✓ (3306), tidb ✓ (4000), postgresql ✓
+- 7. mariadb ✗ (只装了 client), GuessDB ✗ (虚构)
+- 8. 答 A,C,D
+tools:
+- dpkg -l
+- systemctl
+- ss -tlnp
+script_snippets:
+- lang: bash
+  purpose: 穷举数据库服务
+  code: "dpkg -l | grep -iE 'mysql|tidb|postgres|mariadb|sqlite|redis|mongo'\necho '---'\nfor svc in mysql\
+    \ mariadb postgresql tidb; do\n    systemctl is-active $svc 2>/dev/null\ndone\necho '---'\nss -tlnp\
+    \ 2>/dev/null | grep -E ':(3306|3307|4000|5432|6379|27017)'"
+common_mistakes:
+- ❌ 答 C,D 漏 mysql (mysql 也在跑, 容器外的)
+- ❌ 答 A,C,D,E 加上 mariadb (只装 client 不算『安装数据库服务』)
+- ❌ 看到 GuessDB 不知道是虚构选项
+lessons:
+- '🎯 多选『数据库服务』判定标准: 装了 server 包 + 服务能启动 (不只看 client)'
+- '🎯 dpkg -l 看包名后缀: -server (服务) vs -client (客户端) vs -common (公共)'
+- '🎯 ss -tlnp 看监听端口验证: 3306=mysql, 3307=mariadb, 4000=tidb, 5432=postgresql'
+- 🎯 选项里的『虚构项』(GuessDB) 是常见干扰, 排除即可
+related_techniques:
+- multichoice_enumeration
+- linux_service_inventory
+related_problems:
+- FIC2026_INITIAL_S_Q16
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

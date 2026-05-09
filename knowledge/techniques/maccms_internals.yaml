@@ -1,0 +1,32 @@
+slug: maccms_internals
+name: 苹果 CMS (maccms) 数据结构
+category: Web 应用 / 数据库
+when_to_use:
+- 题目涉及 maccms / 苹果 CMS / 视频网站后台
+detect_signal:
+- 路径 /var/www/html/maccms / /www/wwwroot/maccms
+algorithm: maccms 标准结构, 表前缀 mac_, 主配置在 application/extra/maccms.php
+script:
+  lang: yaml
+  code: "files:\n  /application/extra/maccms.php:  # 主配置 (域名/ICP/SEO)\n  /application/database.php:  \
+    \   # 数据库连接\n  /template/<name>/info.ini:     # 模板配置 (被使用的模板)\n  /template/<name>/html/*.html:   #\
+    \ 具体模板文件\n\ntables:\n  mac_user:\n    user_id, user_name, user_pwd  # 密码 md5\n    user_reg_time (unix\
+    \ ts)\n    user_last_login_ip (int unsigned)  # ⚠ 需 inet_ntoa\n  mac_type:\n    type_id, type_name\
+    \ (中文), type_en (拼音 slug)\n  mac_vod:\n    vod_id, vod_name, vod_pic (封面图 URL/文件名)\n    vod_play_url,\
+    \ vod_time (上架时间)\n\nadmin_login:\n  默认 /admin.php, 但常被改名 (本次为 user.php)\n  改名标志: maccms.php 中 ENTRANCE\
+    \ 常量\n"
+seen_in:
+- FIC2026_INITIAL_S_Q5
+- FIC2026_INITIAL_S_Q6
+- FIC2026_INITIAL_S_Q7
+- FIC2026_INITIAL_S_Q8
+- FIC2026_INITIAL_S_Q9
+- FIC2026_INITIAL_S_Q15
+- FIC2026_INITIAL_I_Q2
+common_pitfalls:
+- ❌ 在 nginx 配置里找 ICP (实际在 maccms.php)
+- ❌ 答 type_name 的拼音 (实际有 type_en 字段)
+- ❌ 把『模板源』当 zip 包 (实际是 info.ini)
+related_techniques:
+- inet_ntoa_conversion
+- lxc_attach

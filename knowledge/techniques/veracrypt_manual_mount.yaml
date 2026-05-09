@@ -1,0 +1,29 @@
+slug: veracrypt_manual_mount
+name: VeraCrypt 容器手动挂载 (无火眼)
+category: 加密容器
+when_to_use:
+- 火眼自动解密失败但密码是对的
+- Linux 环境, 没有火眼仿真
+- 需要批量/无 GUI 环境处理
+detect_signal:
+- 文件大小是整 MB/GB (10MB / 1GB), 内容看似随机
+- 火眼提示『需要 VeraCrypt 解密』
+- 文件无 magic 头 (前 64 字节是 VC 加密头, 看起来全是随机)
+algorithm: VeraCrypt 用 AES/Twofish/Serpent + 多种 hash + 密码迭代派生 key
+script:
+  lang: bash
+  code: "# 命令行挂载 (Linux)\nveracrypt --text --mount <volume_file> /mnt/vc \\\n    --password='9ed2@99y8.com.cn'\
+    \ \\\n    --pim=0 --keyfiles='' --protect-hidden=no\n\n# 卸载\nveracrypt --text --dismount /mnt/vc\n\
+    \n# Windows GUI: 启动 VeraCrypt → Select File → Mount → 输入密码\n\n# 试探所有密码 (字典攻击)\nfor pwd in $(cat passwords.txt);\
+    \ do\n    veracrypt --text --mount vc_file /mnt/vc \\\n        --password=\"$pwd\" --pim=0 --keyfiles=''\
+    \ --non-interactive 2>/dev/null \\\n        && echo \"FOUND: $pwd\" && break\ndone\n"
+seen_in:
+- FIC2026_INITIAL_C_Q8
+- FIC2026_INITIAL_C_Q9
+- FIC2026_INITIAL_C_Q10
+common_pitfalls:
+- ❌ 密码错以为是火眼 bug, 实际可能是另一密码
+- ❌ pim 参数错误 (默认 0, 但有的设置非默认)
+- ❌ 没装 veracrypt cli (apt install veracrypt 或下载 .deb)
+related_techniques:
+- cross_material_password

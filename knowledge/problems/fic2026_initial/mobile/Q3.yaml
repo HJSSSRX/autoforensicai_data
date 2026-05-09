@@ -1,0 +1,27 @@
+qid: FIC2026_INITIAL_M_Q3
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 3
+question: 分析手机检材，李安弘手机中与网站搭建人员沟通所使用的app安装日期为【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】 【参考格式：20260101】
+question_type: number
+expected_format: ''
+keywords:
+- 李安弘手机中与网站搭建人员沟通所使用的app安装日期为
+official_answer: '20260414'
+our_actual_answer: '20260414'
+our_confidence: medium
+result: correct
+verification_status: unverified
+method_summary: APP 分析锁定 uuutalk → 安装时间
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true

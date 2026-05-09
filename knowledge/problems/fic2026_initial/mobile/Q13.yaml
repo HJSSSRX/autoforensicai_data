@@ -1,0 +1,30 @@
+qid: FIC2026_INITIAL_M_Q13
+competition: FIC
+year: 2026
+stage: initial
+category: mobile
+question_no: 13
+question: 上述APP将非法收集的用户隐私数据上传至远程服务器。上传地址在代码中经过编码处理。请找出编码方式，还原出完整的上传服务器URL。【不区分大小写】【不区分空格】【不区分换行符 (不考虑末尾)】【不区分全半角】
+question_type: text
+expected_format: ''
+keywords:
+- 上述APP将非法收集的用户隐私数据上传至远程服务器
+- 上传地址在代码中经过编码处理
+- 请找出编码方式
+- 还原出完整的上传服务器URL
+official_answer: Base64
+our_actual_answer: Base64
+our_confidence: high
+result: correct
+verification_status: unverified
+method_summary: 敏感字段 aHR0cHM6Ly9hcGku... → Base64 解码 → URL (题目只问编码方式)
+solution_steps: []
+tools: []
+script_snippets: []
+common_mistakes: []
+lessons: []
+related_techniques: []
+related_problems: []
+contributed_by: main_designer
+contributed_at: '2026-05-09'
+verified: true
